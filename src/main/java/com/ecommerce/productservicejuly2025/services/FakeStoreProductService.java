@@ -3,7 +3,10 @@ package com.ecommerce.productservicejuly2025.services;
 import com.ecommerce.productservicejuly2025.dtos.FakeStoreProductDto;
 import com.ecommerce.productservicejuly2025.models.Category;
 import com.ecommerce.productservicejuly2025.models.Product;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -56,4 +59,34 @@ public class FakeStoreProductService implements ProductService{
 
         return products;
     }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        //PATCH
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product,FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class , restTemplate.getMessageConverters());
+        FakeStoreProductDto fakeStoreProductDto= restTemplate.execute(
+                "https://fakestoreapi.com/products/" + id,
+                HttpMethod.PATCH ,
+                requestCallback ,
+                responseExtractor
+        );
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+    }
+
+    //My code
+    @Override
+    public Product replaceProduct(Long id, Product product) {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product,FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class , restTemplate.getMessageConverters());
+        FakeStoreProductDto fakeStoreProductDto= restTemplate.execute(
+                "https://fakestoreapi.com/products/" + id,
+                HttpMethod.PUT ,
+                requestCallback ,
+                responseExtractor
+        );
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+    }
+
+
 }
