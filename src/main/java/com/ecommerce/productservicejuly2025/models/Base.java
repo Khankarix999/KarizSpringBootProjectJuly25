@@ -1,5 +1,9 @@
 package com.ecommerce.productservicejuly2025.models;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +11,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@MappedSuperclass
 public class Base {
 
     public Long getId() {
@@ -33,6 +38,8 @@ public class Base {
         this.createAT = createAT;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto increament
     private Long id;
     private Date createAT;
     private Date updateAT;

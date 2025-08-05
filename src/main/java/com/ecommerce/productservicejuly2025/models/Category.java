@@ -1,12 +1,14 @@
 package com.ecommerce.productservicejuly2025.models;
 
+import jakarta.persistence.Entity;
 import jdk.jfr.SettingDefinition;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Category {
+@Entity
+public class Category extends Base{
 
     public String getName() {
         return name;
@@ -27,8 +29,9 @@ public class Category {
     private String name;
     private String description;
 
-    public Category(String name , String description) {
-        this.name = name;
-        this.description = description;
-    }
+
+//    public Category(String name , String description) {
+//        this.name = name;
+//        this.description = description;
+//    }
 }
