@@ -67,6 +67,11 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
+    public void deleteSingleProduct(Long ProductId) {
+
+    }
+
+    @Override
     public Product updateProduct(Long id, Product product) {
         //PATCH
         RequestCallback requestCallback = restTemplate.httpEntityCallback(product,FakeStoreProductDto.class);

@@ -34,8 +34,13 @@ public class ProductController {
   }
 
   @GetMapping
-  public List<Product> getAllProducts(){
-    return productService.getAllProduct() ; 
+  public ResponseEntity<List<Product>>  getAllProducts(){
+      ResponseEntity<List<Product>> responseEntity = new ResponseEntity<>(
+              productService.getAllProduct(),
+              HttpStatus.OK
+      );
+
+        return responseEntity;
   }
 
   @PutMapping("/{id}")
@@ -44,8 +49,13 @@ public class ProductController {
   }
     //partial update
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product) throws ProductNotFoundException {
         return   productService.updateProduct(id, product);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteproduct(@PathVariable("id") Long id) throws ProductNotFoundException {
+        productService.deleteSingleProduct(id);
     }
 
 

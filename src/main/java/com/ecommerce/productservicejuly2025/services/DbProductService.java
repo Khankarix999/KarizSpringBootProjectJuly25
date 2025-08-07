@@ -31,12 +31,38 @@ public class DbProductService implements ProductService {
 
     @Override
     public List<Product> getAllProduct() {
-        return null;
+        return productRepository.findAll();
+
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
+    public void deleteSingleProduct(Long ProductId) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(ProductId);
+
+        if(optionalProduct.isEmpty()){
+            throw new ProductNotFoundException("Product with id "+ ProductId + "does not exist"  );
+        }
+        productRepository.deleteById(ProductId);
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) throws ProductNotFoundException {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+
+        if(optionalProduct.isEmpty()){
+            throw new ProductNotFoundException("Product with id "+ id + "does not exist"  );
+        }
+
+        Product productInDb = optionalProduct.get();
+
+        if(product.getTitle() != null){
+            productInDb.setTitle(product.getTitle());
+        }
+
+        if(product.getPrice() != null){
+            productInDb.setPrice(product.getPrice());
+        }
+        return productRepository.save(productInDb);
     }
 
     @Override
