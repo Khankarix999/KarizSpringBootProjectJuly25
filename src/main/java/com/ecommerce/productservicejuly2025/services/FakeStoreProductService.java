@@ -99,5 +99,10 @@ public class FakeStoreProductService implements ProductService{
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
 
+    @Override
+    public Product addNewProduct(Product product) {
+        return null;
+    }
+
 
 }

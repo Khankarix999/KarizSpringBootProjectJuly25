@@ -1,7 +1,9 @@
 package com.ecommerce.productservicejuly2025.services;
 
 import com.ecommerce.productservicejuly2025.exceptions.ProductNotFoundException;
+import com.ecommerce.productservicejuly2025.models.Category;
 import com.ecommerce.productservicejuly2025.models.Product;
+import com.ecommerce.productservicejuly2025.repositories.CategoryRepository;
 import com.ecommerce.productservicejuly2025.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 public class DbProductService implements ProductService {
 
     ProductRepository productRepository;
+    CategoryRepository categoryRepository;
 
-    public DbProductService(ProductRepository productReposiitory){
-        this.productRepository = productReposiitory;
+    public DbProductService(ProductRepository productRepository , CategoryRepository categoryRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
 
@@ -68,6 +72,18 @@ public class DbProductService implements ProductService {
     @Override
     public Product replaceProduct(Long id, Product product) {
         return null;
+    }
+
+    @Override
+    public Product addNewProduct(Product product) {
+        Category category = product.getCategory();
+//        if(category.getId() == null){
+//            // we need to create a new cetogery object in  db
+//            categoryRepository.save(category);
+//            product.setCategory(category);
+//        }
+
+      return    productRepository.save(product);
     }
 
 

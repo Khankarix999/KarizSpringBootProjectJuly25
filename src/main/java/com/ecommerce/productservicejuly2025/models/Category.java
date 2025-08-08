@@ -1,9 +1,12 @@
 package com.ecommerce.productservicejuly2025.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jdk.jfr.SettingDefinition;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,4 +37,6 @@ public class Category extends Base{
 //        this.name = name;
 //        this.description = description;
 //    }
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 }

@@ -1,7 +1,9 @@
 package com.ecommerce.productservicejuly2025.repositories;
 
 import com.ecommerce.productservicejuly2025.models.Product;
+import com.ecommerce.productservicejuly2025.projections.ProductWithIdAndTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,4 +30,11 @@ public interface ProductRepository extends JpaRepository<Product ,Long > {
 
 
     Optional<Product> findById(Long aLong);
+
+    @Query("select p.id as id, p.title as title from Product p")
+    List<ProductWithIdAndTitle> randomSearchMethodForProduct();
+
+    // Native query
+    @Query(nativeQuery = true , value="select p.id as id , p.title as title from product p")
+    List<ProductWithIdAndTitle> nativeSearchMethodForProduct();
 }

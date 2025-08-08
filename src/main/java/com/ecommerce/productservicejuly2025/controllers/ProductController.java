@@ -22,6 +22,11 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @PostMapping
+    public Product addNewProduct(@RequestBody Product product){
+       return  productService.addNewProduct(product);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductId(@PathVariable("id") Long id) throws ProductNotFoundException {
         ResponseEntity<Product> responseEntity = new ResponseEntity<>(
