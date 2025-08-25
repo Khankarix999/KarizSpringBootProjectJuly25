@@ -1,6 +1,8 @@
 package com.ecommerce.productservicejuly2025.controllers;
 
 
+import com.ecommerce.productservicejuly2025.commons.AuthCommons;
+import com.ecommerce.productservicejuly2025.dtos.UserDto;
 import com.ecommerce.productservicejuly2025.exceptions.ProductNotFoundException;
 import com.ecommerce.productservicejuly2025.models.Product;
 import com.ecommerce.productservicejuly2025.services.ProductService;
@@ -17,9 +19,12 @@ import java.util.List;
 public class ProductController {
 
     ProductService productService;
+    private AuthCommons authCommons;
 
-    public ProductController(@Qualifier("dbProductService") ProductService productService) {
+    public ProductController(@Qualifier("dbProductService") ProductService productService
+                            , AuthCommons authCommons) {
         this.productService = productService;
+        this.authCommons = authCommons;
     }
 
     @PostMapping
@@ -28,13 +33,23 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductId(@PathVariable("id") Long id) throws ProductNotFoundException {
-        ResponseEntity<Product> responseEntity = new ResponseEntity<>(
-                productService.getSingleProduct(id),
-                HttpStatus.OK
-        );
+    public ResponseEntity<Product> getProductId(@PathVariable("id") Long id , @RequestHeader("authToken") String token) throws ProductNotFoundException {
 
-        return responseEntity ;
+        UserDto userDto = authCommons.validateToken(token);
+        ResponseEntity<Product> responseEntity;
+        if(userDto == null){
+            responseEntity = new ResponseEntity<>(null ,HttpStatus.FORBIDDEN);
+            return responseEntity;
+        }
+
+        Product product = productService.getSingleProduct(id);
+        responseEntity = new ResponseEntity<>(product, HttpStatus.OK);
+//        ResponseEntity<Product> responseEntity = new ResponseEntity<>(
+//                productService.getSingleProduct(id),
+//                HttpStatus.OK
+//        );
+//  role base access wala implement karna hai
+       return responseEntity ;
 
   }
 
