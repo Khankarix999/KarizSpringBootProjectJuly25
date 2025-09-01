@@ -9,7 +9,7 @@ public interface ProductService {
 
     Product getSingleProduct(Long ProductId) throws ProductNotFoundException;
 
-    List<Product> getAllProduct();
+    List<Product> getAllProduct(int pageNumber , int pageSize);
 
     void deleteSingleProduct(Long ProductId) throws ProductNotFoundException;
 

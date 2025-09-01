@@ -7,6 +7,7 @@ import com.ecommerce.productservicejuly2025.exceptions.ProductNotFoundException;
 import com.ecommerce.productservicejuly2025.models.Product;
 import com.ecommerce.productservicejuly2025.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +34,14 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductId(@PathVariable("id") Long id , @RequestHeader("authToken") String token) throws ProductNotFoundException {
+    public ResponseEntity<Product> getProductId(@PathVariable("id") Long id) throws ProductNotFoundException {
 
-        UserDto userDto = authCommons.validateToken(token);
+//        UserDto userDto = authCommons.validateToken(token);
         ResponseEntity<Product> responseEntity;
-        if(userDto == null){
-            responseEntity = new ResponseEntity<>(null ,HttpStatus.FORBIDDEN);
-            return responseEntity;
-        }
+//        if(userDto == null){
+//            responseEntity = new ResponseEntity<>(null ,HttpStatus.FORBIDDEN);
+//            return responseEntity;
+//        }
 
         Product product = productService.getSingleProduct(id);
         responseEntity = new ResponseEntity<>(product, HttpStatus.OK);
@@ -54,9 +55,10 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Product>>  getAllProducts(){
+  public ResponseEntity<List<Product>>  getAllProducts(@RequestParam("pageNumber") int pageNumber,
+                                                       @RequestParam("pageSize") int pageSize){
       ResponseEntity<List<Product>> responseEntity = new ResponseEntity<>(
-              productService.getAllProduct(),
+              productService.getAllProduct(pageNumber, pageSize),
               HttpStatus.OK
       );
 
@@ -77,6 +79,7 @@ public class ProductController {
     public void deleteproduct(@PathVariable("id") Long id) throws ProductNotFoundException {
         productService.deleteSingleProduct(id);
     }
+
 
 
 }

@@ -5,6 +5,9 @@
     import com.ecommerce.productservicejuly2025.models.Product;
     import com.ecommerce.productservicejuly2025.repositories.CategoryRepository;
     import com.ecommerce.productservicejuly2025.repositories.ProductRepository;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    import org.springframework.data.domain.Sort;
     import org.springframework.stereotype.Service;
 
     import java.util.List;
@@ -34,8 +37,10 @@
         }
 
         @Override
-        public List<Product> getAllProduct() {
-            return productRepository.findAll();
+        public List<Product> getAllProduct(int pageNumber , int pageSize) {
+            Sort sort = Sort.by("price").and(Sort.by("title").descending());
+            Pageable pageable = PageRequest.of(pageNumber , pageSize , sort);
+            return productRepository.findAll(pageable).getContent();
 
         }
 
