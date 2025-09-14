@@ -33,10 +33,12 @@ public class Category extends Base{
     private String description;
 
 
-//    public Category(String name , String description) {
-//        this.name = name;
-//        this.description = description;
-//    }
+    public Category(String name , String description) {
+        this.name = name;
+        this.description = description;
+    }
+    protected Category() {
+    }
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

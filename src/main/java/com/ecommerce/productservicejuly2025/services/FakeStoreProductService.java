@@ -4,6 +4,7 @@ import com.ecommerce.productservicejuly2025.dtos.FakeStoreProductDto;
 import com.ecommerce.productservicejuly2025.exceptions.ProductNotFoundException;
 import com.ecommerce.productservicejuly2025.models.Category;
 import com.ecommerce.productservicejuly2025.models.Product;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -17,14 +18,23 @@ import java.util.List;
 public class FakeStoreProductService implements ProductService{
 
     RestTemplate restTemplate;
+    RedisTemplate<String,Object> redisTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate , RedisTemplate<String,Object> redisTemplate) {
+
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getSingleProduct(Long ProductId) throws ProductNotFoundException {
 
+        Product product = (Product) redisTemplate.opsForHash().get("PRODUCTS" ,"PRODUCT_"+ProductId);
+
+        if(product != null) {
+            //cache HIT
+            return product;
+        }
         FakeStoreProductDto fakeStoreProductDto =
                 restTemplate.getForObject("https://fakestoreapi.com/products/" + ProductId,
                 FakeStoreProductDto.class);
@@ -34,17 +44,21 @@ public class FakeStoreProductService implements ProductService{
              throw new ProductNotFoundException("Product with id " + ProductId +" does not exist");
         }
 
-        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+        product =  convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+
+        redisTemplate.opsForHash().put("PRODUCTS" ,"PRODUCT_"+ProductId,product);
+
+        return product;
 
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
         Product product = new Product();
         product.setId(fakeStoreProductDto.getId());
-//        product.setCategory(new Category(fakeStoreProductDto.getCategory(),
-//                fakeStoreProductDto.getDescription()));
-//            product.setTitle(fakeStoreProductDto.getTitle());
-//            product.setPrice(fakeStoreProductDto.getPrice());
+        product.setCategory(new Category(fakeStoreProductDto.getCategory(),
+                fakeStoreProductDto.getDescription()));
+            product.setTitle(fakeStoreProductDto.getTitle());
+            product.setPrice(fakeStoreProductDto.getPrice());
 
         return product;
     }

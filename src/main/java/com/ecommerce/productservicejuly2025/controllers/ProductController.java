@@ -22,7 +22,7 @@ public class ProductController {
     ProductService productService;
     private AuthCommons authCommons;
 
-    public ProductController(@Qualifier("dbProductService") ProductService productService
+    public ProductController(@Qualifier("fakeStoreService") ProductService productService
                             , AuthCommons authCommons) {
         this.productService = productService;
         this.authCommons = authCommons;
@@ -58,6 +58,7 @@ public class ProductController {
   public ResponseEntity<List<Product>>  getAllProducts(@RequestParam("pageNumber") int pageNumber,
                                                        @RequestParam("pageSize") int pageSize){
       ResponseEntity<List<Product>> responseEntity = new ResponseEntity<>(
+
               productService.getAllProduct(pageNumber, pageSize),
               HttpStatus.OK
       );

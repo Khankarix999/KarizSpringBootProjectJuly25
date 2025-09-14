@@ -38,7 +38,7 @@
 
         @Override
         public List<Product> getAllProduct(int pageNumber , int pageSize) {
-            Sort sort = Sort.by("price").and(Sort.by("title").descending());
+            Sort sort = Sort.by("price").descending();
             Pageable pageable = PageRequest.of(pageNumber , pageSize , sort);
             return productRepository.findAll(pageable).getContent();
 
